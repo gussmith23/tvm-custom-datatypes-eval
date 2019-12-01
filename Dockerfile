@@ -33,7 +33,7 @@ ENV PYTHON_PACKAGES="\
     decorator \
     scipy \
     mxnet \
-" 
+"
 RUN pip3 install --upgrade pip
 RUN pip3 install $PYTHON_PACKAGES
 
