@@ -73,7 +73,6 @@ def load_bfloat():
         'Mul': tvm.datatype.create_lower_func("BFloat16Mul_wrapper"),
         'Div': tvm.datatype.create_lower_func("BFloat16Div_wrapper"),
         'Max': tvm.datatype.create_lower_func("BFloat16Max_wrapper"),
-        'Max': tvm.datatype.create_lower_func("BFloat16Max_wrapper"),
     }
     intrinsic_map = {
         'sqrt': tvm.datatype.create_lower_func("BFloat16Sqrt_wrapper"),
