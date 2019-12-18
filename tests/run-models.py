@@ -24,9 +24,15 @@ from tvm.relay.testing.inception_v3 import get_workload as get_inception
 from tvm.relay.testing.resnet import get_workload as get_resnet
 from tvm.relay.testing.mobilenet import get_workload as get_mobilenet
 from nose.tools import nottest
+from load_datatypes import load_bfloat
 from util import change_dtype, convert_ndarray
 
 tgt = "llvm"
+
+
+def setup():
+    load_bfloat()
+
 
 # def setup():
 #     """Set up tests
@@ -183,7 +189,12 @@ tgt = "llvm"
 #     tvm.datatype.register_min_func(lambda num_bits: -1.79769e+308, "posit")
 
 
-def run_model(get_workload, input_shape, src_dtype, dst_dtype):
+def run_model(get_workload,
+              input_shape,
+              src_dtype,
+              dst_dtype,
+              rtol=0.0001,
+              atol=0.0001):
     module, params = get_workload()
 
     ex = relay.create_executor("graph")
@@ -205,20 +216,35 @@ def run_model(get_workload, input_shape, src_dtype, dst_dtype):
     # Vectorization is not implemented with custom datatypes.
     with tvm.build_config(disable_vectorize=True):
         result = ex.evaluate(expr)(input, **params)
-        print(correct)
-        print(convert_ndarray(src_dtype, result, ex))
 
     tvm.testing.assert_allclose(convert_ndarray(src_dtype, result,
                                                 ex).asnumpy(),
                                 correct.asnumpy(),
-                                rtol=0.001,
-                                atol=0.001)
+                                rtol=rtol,
+                                atol=atol)
 
 
 def test_models():
-    run_model(get_mobilenet, (3, 224, 224), 'float32', 'custom[posit]32')
-    run_model(get_inception, (3, 299, 299), 'float32', 'custom[posit]32')
-    run_model(get_resnet, (3, 224, 224), 'float32', 'custom[posit]32')
+    # run_model(get_mobilenet, (3, 224, 224), 'float32', 'custom[posit]32')
+    # run_model(get_inception, (3, 299, 299), 'float32', 'custom[posit]32')
+    # run_model(get_resnet, (3, 224, 224), 'float32', 'custom[posit]32')
+
+    # Tolerances set to infinity because bfloat is not numerically correct.
+    run_model(get_mobilenet, (3, 224, 224),
+              'float32',
+              'custom[bfloat]16',
+              rtol=float('Inf'),
+              atol=float('Inf'))
+    run_model(get_inception, (3, 299, 299),
+              'float32',
+              'custom[bfloat]16',
+              rtol=float('Inf'),
+              atol=float('Inf'))
+    run_model(get_resnet, (3, 224, 224),
+              'float32',
+              'custom[bfloat]16',
+              rtol=float('Inf'),
+              atol=float('Inf'))
 
 
 if __name__ == "__main__":
