@@ -1,3 +1,4 @@
+from os import path
 import tvm
 from ctypes import CDLL, RTLD_GLOBAL
 
@@ -42,3 +43,30 @@ def load_datatype(dtype, code, library_path, casts_from_this_type_map,
                                  "llvm",
                                  dtype,
                                  intrinsic_name=intrinsic_name)
+
+
+def load_bfloat():
+    library_path = path.join(path.abspath(path.dirname(__file__)), '../bfloat16/bfloat16.so')
+    casts_from_this_type_map = {
+        'float': tvm.datatype.create_lower_func("BFloat16ToFloat_wrapper"),
+    }
+    casts_to_this_type_map = {
+        'float': tvm.datatype.create_lower_func("FloatToBFloat16_wrapper"),
+        'int': tvm.datatype.create_lower_func("IntToBFloat16_wrapper"),
+    }
+    op_map = {
+        'Add': tvm.datatype.create_lower_func("BFloat16Add_wrapper"),
+        'Sub': tvm.datatype.create_lower_func("BFloat16Sub_wrapper"),
+        'FloatImm': tvm.datatype.create_lower_func("FloatToBFloat16_wrapper"),
+        'Mul': tvm.datatype.create_lower_func("BFloat16Mul_wrapper"),
+        'Div': tvm.datatype.create_lower_func("BFloat16Div_wrapper"),
+        'Max': tvm.datatype.create_lower_func("BFloat16Max_wrapper"),
+        'Max': tvm.datatype.create_lower_func("BFloat16Max_wrapper"),
+    }
+    intrinsic_map = {
+        'sqrt': tvm.datatype.create_lower_func("BFloat16Sqrt_wrapper"),
+        'tvm_if_then_else': tvm.datatype.lower_ite,
+        'exp': tvm.datatype.create_lower_func("BFloat16Exp_wrapper"),
+    }
+    load_datatype('bfloat', 129, library_path, casts_from_this_type_map,
+                  casts_to_this_type_map, op_map, intrinsic_map)
