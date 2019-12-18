@@ -3,8 +3,14 @@ import tvm
 from ctypes import CDLL, RTLD_GLOBAL
 
 
-def load_datatype(dtype, code, library_path, casts_from_this_type_map,
-                  casts_to_this_type_map, op_map, intrinsic_map):
+def load_datatype(dtype,
+                  code,
+                  library_path,
+                  casts_from_this_type_map,
+                  casts_to_this_type_map,
+                  op_map,
+                  intrinsic_map,
+                  minimum_func=None):
     """Utility function for registering a datatype.
 
     dtype: the type name to register
@@ -21,6 +27,8 @@ def load_datatype(dtype, code, library_path, casts_from_this_type_map,
       similar to above
     intrinsic_map: dictionary mapping intrinsic names ("sqrt") to
       lowering funcs similar to above
+    minimum_func: minimum function needed by
+      tvm.datatype.register_min_func
     """
 
     tvm.datatype.register(dtype, code)
@@ -43,6 +51,9 @@ def load_datatype(dtype, code, library_path, casts_from_this_type_map,
                                  "llvm",
                                  dtype,
                                  intrinsic_name=intrinsic_name)
+
+    if minimum_func:
+        tvm.datatype.register_min_func(minimum_func, dtype)
 
 
 def load_bfloat():
@@ -68,5 +79,15 @@ def load_bfloat():
         'tvm_if_then_else': tvm.datatype.lower_ite,
         'exp': tvm.datatype.create_lower_func("BFloat16Exp_wrapper"),
     }
-    load_datatype('bfloat', 129, library_path, casts_from_this_type_map,
-                  casts_to_this_type_map, op_map, intrinsic_map)
+    # TODO(gus) these aren't actually right. these are double min(actually
+    # lowest)/max.
+    minimum_func = lambda _: -1.79769e+308
+
+    load_datatype('bfloat',
+                  129,
+                  library_path,
+                  casts_from_this_type_map,
+                  casts_to_this_type_map,
+                  op_map,
+                  intrinsic_map,
+                  minimum_func=minimum_func)
