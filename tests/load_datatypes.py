@@ -92,6 +92,7 @@ def load_bfloat():
                   intrinsic_map,
                   minimum_func=minimum_func)
 
+
 def load_posit8():
     library_path = path.join(path.abspath(path.dirname(__file__)),
                              '../universal-wrapper/universal-wrapper.so')
@@ -121,6 +122,80 @@ def load_posit8():
 
     load_datatype('posit8',
                   130,
+                  library_path,
+                  casts_from_this_type_map,
+                  casts_to_this_type_map,
+                  op_map,
+                  intrinsic_map,
+                  minimum_func=minimum_func)
+
+
+def load_posit16():
+    library_path = path.join(path.abspath(path.dirname(__file__)),
+                             '../universal-wrapper/universal-wrapper.so')
+    casts_from_this_type_map = {
+        'float': tvm.datatype.create_lower_func("Posit16es1ToFloat"),
+    }
+    casts_to_this_type_map = {
+        'float': tvm.datatype.create_lower_func("FloatToPosit16es1"),
+        'int': tvm.datatype.create_lower_func("IntToPosit16es1"),
+    }
+    op_map = {
+        'Add': tvm.datatype.create_lower_func("Posit16es1Add"),
+        'Sub': tvm.datatype.create_lower_func("Posit16es1Sub"),
+        'FloatImm': tvm.datatype.create_lower_func("FloatToPosit16es1"),
+        'Mul': tvm.datatype.create_lower_func("Posit16es1Mul"),
+        'Div': tvm.datatype.create_lower_func("Posit16es1Div"),
+        'Max': tvm.datatype.create_lower_func("Posit16es1Max"),
+    }
+    intrinsic_map = {
+        'sqrt': tvm.datatype.create_lower_func("Posit16es1Sqrt"),
+        'tvm_if_then_else': tvm.datatype.lower_ite,
+        'exp': tvm.datatype.create_lower_func("Posit16es1Exp"),
+    }
+    # TODO(gus) these aren't actually right. these are double min(actually
+    # lowest)/max.
+    minimum_func = lambda _: -1.79769e+308
+
+    load_datatype('posit16',
+                  131,
+                  library_path,
+                  casts_from_this_type_map,
+                  casts_to_this_type_map,
+                  op_map,
+                  intrinsic_map,
+                  minimum_func=minimum_func)
+
+
+def load_posit32():
+    library_path = path.join(path.abspath(path.dirname(__file__)),
+                             '../universal-wrapper/universal-wrapper.so')
+    casts_from_this_type_map = {
+        'float': tvm.datatype.create_lower_func("Posit32es2ToFloat"),
+    }
+    casts_to_this_type_map = {
+        'float': tvm.datatype.create_lower_func("FloatToPosit32es2"),
+        'int': tvm.datatype.create_lower_func("IntToPosit32es2"),
+    }
+    op_map = {
+        'Add': tvm.datatype.create_lower_func("Posit32es2Add"),
+        'Sub': tvm.datatype.create_lower_func("Posit32es2Sub"),
+        'FloatImm': tvm.datatype.create_lower_func("FloatToPosit32es2"),
+        'Mul': tvm.datatype.create_lower_func("Posit32es2Mul"),
+        'Div': tvm.datatype.create_lower_func("Posit32es2Div"),
+        'Max': tvm.datatype.create_lower_func("Posit32es2Max"),
+    }
+    intrinsic_map = {
+        'sqrt': tvm.datatype.create_lower_func("Posit32es2Sqrt"),
+        'tvm_if_then_else': tvm.datatype.lower_ite,
+        'exp': tvm.datatype.create_lower_func("Posit32es2Exp"),
+    }
+    # TODO(gus) these aren't actually right. these are double min(actually
+    # lowest)/max.
+    minimum_func = lambda _: -1.79769e+308
+
+    load_datatype('posit32',
+                  131,
                   library_path,
                   casts_from_this_type_map,
                   casts_to_this_type_map,

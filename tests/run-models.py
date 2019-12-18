@@ -24,7 +24,7 @@ from tvm.relay.testing.inception_v3 import get_workload as get_inception
 from tvm.relay.testing.resnet import get_workload as get_resnet
 from tvm.relay.testing.mobilenet import get_workload as get_mobilenet
 from nose.tools import nottest
-from load_datatypes import load_bfloat, load_posit8
+from load_datatypes import load_bfloat, load_posit8, load_posit16, load_posit32
 from util import change_dtype, convert_ndarray
 
 tgt = "llvm"
@@ -33,6 +33,8 @@ tgt = "llvm"
 def setup():
     load_bfloat()
     load_posit8()
+    load_posit16()
+    load_posit32()
 
 
 # def setup():
