@@ -23,7 +23,6 @@ from tvm import relay
 from tvm.relay.testing.inception_v3 import get_workload as get_inception
 from tvm.relay.testing.resnet import get_workload as get_resnet
 from tvm.relay.testing.mobilenet import get_workload as get_mobilenet
-from tvm.relay import transform
 from nose.tools import nottest
 
 tgt = "llvm"
