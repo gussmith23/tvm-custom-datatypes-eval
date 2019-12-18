@@ -91,3 +91,39 @@ def load_bfloat():
                   op_map,
                   intrinsic_map,
                   minimum_func=minimum_func)
+
+def load_posit8():
+    library_path = path.join(path.abspath(path.dirname(__file__)),
+                             '../universal-wrapper/universal-wrapper.so')
+    casts_from_this_type_map = {
+        'float': tvm.datatype.create_lower_func("Posit8es0ToFloat"),
+    }
+    casts_to_this_type_map = {
+        'float': tvm.datatype.create_lower_func("FloatToPosit8es0"),
+        'int': tvm.datatype.create_lower_func("IntToPosit8es0"),
+    }
+    op_map = {
+        'Add': tvm.datatype.create_lower_func("Posit8es0Add"),
+        'Sub': tvm.datatype.create_lower_func("Posit8es0Sub"),
+        'FloatImm': tvm.datatype.create_lower_func("FloatToPosit8es0"),
+        'Mul': tvm.datatype.create_lower_func("Posit8es0Mul"),
+        'Div': tvm.datatype.create_lower_func("Posit8es0Div"),
+        'Max': tvm.datatype.create_lower_func("Posit8es0Max"),
+    }
+    intrinsic_map = {
+        'sqrt': tvm.datatype.create_lower_func("Posit8es0Sqrt"),
+        'tvm_if_then_else': tvm.datatype.lower_ite,
+        'exp': tvm.datatype.create_lower_func("Posit8es0Exp"),
+    }
+    # TODO(gus) these aren't actually right. these are double min(actually
+    # lowest)/max.
+    minimum_func = lambda _: -1.79769e+308
+
+    load_datatype('posit8',
+                  130,
+                  library_path,
+                  casts_from_this_type_map,
+                  casts_to_this_type_map,
+                  op_map,
+                  intrinsic_map,
+                  minimum_func=minimum_func)
