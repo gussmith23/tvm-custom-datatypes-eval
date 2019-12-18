@@ -57,7 +57,8 @@ def load_datatype(dtype,
 
 
 def load_bfloat():
-    library_path = path.join(path.abspath(path.dirname(__file__)), '../bfloat16/bfloat16.so')
+    library_path = path.join(path.abspath(path.dirname(__file__)),
+                             '../bfloat16/bfloat16.so')
     casts_from_this_type_map = {
         'float': tvm.datatype.create_lower_func("BFloat16ToFloat_wrapper"),
     }
