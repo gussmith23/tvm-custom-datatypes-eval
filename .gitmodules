@@ -1,6 +1,6 @@
 [submodule "tvm"]
 	path = tvm
 	url = git@github.com:gussmith23/tvm
-[submodule "universal-wrapper/universal"]
-	path = universal-wrapper/universal
+[submodule "universal"]
+	path = datatypes/universal-wrapper/universal
 	url = git@github.com:stillwater-sc/universal
