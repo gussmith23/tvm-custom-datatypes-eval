@@ -1,6 +1,8 @@
 This is the evaluation repo for the TVM Bring Your Own Datatypes project.
 
 # Installation
+Pull this code, making sure to use `--recursive`.
+
 Build the Dockerfile:
 ```bash
 docker build . -t datatypes-eval
