@@ -1,8 +1,8 @@
 from tvm.relay.testing.inception_v3 import get_workload as get_inception
 from tvm.relay.testing.resnet import get_workload as get_resnet
 from tvm.relay.testing.mobilenet import get_workload as get_mobilenet
-from run_models import run_model
-from load_datatypes import load_bfloat, load_posit8, load_posit16, load_posit32
+from util.run_models import run_model
+from util.load_datatypes import load_bfloat, load_posit8, load_posit16, load_posit32
 
 load_bfloat()
 load_posit8()

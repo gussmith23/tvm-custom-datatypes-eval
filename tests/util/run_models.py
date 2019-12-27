@@ -19,7 +19,7 @@
 import tvm
 import numpy as np
 from tvm import relay
-from util import change_dtype, convert_ndarray
+from .change_dtype import change_dtype, convert_ndarray
 
 
 def run_model(get_workload,
