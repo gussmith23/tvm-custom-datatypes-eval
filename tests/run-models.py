@@ -232,6 +232,12 @@ def test_models():
     # run_model(get_inception, (3, 299, 299), 'float32', 'custom[posit]32')
     # run_model(get_resnet, (3, 224, 224), 'float32', 'custom[posit]32')
 
+    run_model(get_mobilenet, (3, 224, 224),
+              'float32',
+              'custom[posit8]8',
+              rtol=float('Inf'),
+              atol=float('Inf'))
+
     # Tolerances set to infinity because bfloat is not numerically correct.
     run_model(get_mobilenet, (3, 224, 224),
               'float32',
