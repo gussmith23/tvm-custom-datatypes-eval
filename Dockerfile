@@ -39,6 +39,11 @@ RUN pip3 install $PYTHON_PACKAGES
 
 WORKDIR /root
 
+# Set up datatypes
+COPY Makefile Makefile
+COPY ./datatypes ./datatypes
+RUN make
+
 # Move tests.
 COPY ./tests ./tests
 
