@@ -14,7 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-"""Utilities for changing datatypes of models."""
+"""Utilities for running models with different datatypes."""
 
 import tvm
 import topi.testing
