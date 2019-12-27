@@ -47,4 +47,7 @@ RUN make
 # Move tests.
 COPY ./tests ./tests
 
-CMD ["nosetests", "./tests"]
+# Move run script.
+COPY run.sh run.sh
+
+CMD ["./run.sh"]
