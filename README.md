@@ -10,3 +10,7 @@ Run the resulting Docker image:
 ```bash
 docker run datatypes-eval
 ```
+
+# What's What?
+- `datatypes`: contains the datatype implementations themselves, and any scripts needed to build the datatype implementations.
+- `tests`: contains datatype tests, each of which is a Python script. Additionally contains some utilities needed by the tests.
