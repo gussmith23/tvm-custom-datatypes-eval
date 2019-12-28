@@ -14,13 +14,13 @@ RUN echo deb http://apt.llvm.org/buster/ llvm-toolchain-buster-8 main \
 RUN cd /usr && git clone https://github.com/apache/incubator-tvm.git tvm --recursive
 WORKDIR /usr/tvm
 RUN git checkout 331f6fd012763438c6d756be051b6e2c8a96f61c
+RUN echo 'set(USE_LLVM llvm-config-8)' >> config.cmake
+RUN echo 'set(USE_RPC ON)' >> config.cmake
+RUN echo 'set(USE_SORT ON)' >> config.cmake
+RUN echo 'set(USE_GRAPH_RUNTIME ON)' >> config.cmake
+RUN echo 'set(USE_BLAS openblas)' >> config.cmake
 RUN bash -c \
-     "echo set\(USE_LLVM llvm-config-8\) >> config.cmake && \
-     echo set\(USE_RPC ON\) >> config.cmake && \
-     echo set\(USE_SORT ON\) >> config.cmake && \
-     echo set\(USE_GRAPH_RUNTIME ON\) >> config.cmake && \
-     echo set\(USE_BLAS openblas\) >> config.cmake && \
-     mkdir -p build && \
+     "mkdir -p build && \
      cd build && \
      cmake .. && \
      make -j2"
