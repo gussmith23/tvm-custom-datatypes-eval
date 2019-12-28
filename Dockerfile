@@ -10,8 +10,8 @@ RUN echo deb http://apt.llvm.org/buster/ llvm-toolchain-buster-8 main \
      wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add - && \
      apt-get update && apt-get install -y llvm-8
 
-# Build TVM
-RUN cd /usr && git clone https://github.com/apache/incubator-tvm.git tvm --recursive
+# Build Gus's version of TVM
+RUN cd /usr && git clone https://github.com/gussmith23/tvm.git tvm --recursive
 WORKDIR /usr/tvm
 RUN git checkout 0aa4d6a4427e6e05bc9b526116ae9c7a894935f7
 RUN echo 'set(USE_LLVM llvm-config-8)' >> config.cmake
