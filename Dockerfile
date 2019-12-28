@@ -19,6 +19,9 @@ RUN echo 'set(USE_RPC ON)' >> config.cmake
 RUN echo 'set(USE_SORT ON)' >> config.cmake
 RUN echo 'set(USE_GRAPH_RUNTIME ON)' >> config.cmake
 RUN echo 'set(USE_BLAS openblas)' >> config.cmake
+RUN echo 'set(CMAKE_CXX_STANDARD 14)' >> config.cmake
+RUN echo 'set(CMAKE_CXX_STANDARD_REQUIRED ON)' >> config.cmake
+RUN echo 'set(CMAKE_CXX_EXTENSIONS OFF)' >> config.cmake
 RUN bash -c \
      "mkdir -p build && \
      cd build && \
