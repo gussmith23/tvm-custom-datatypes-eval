@@ -13,7 +13,7 @@ RUN echo deb http://apt.llvm.org/buster/ llvm-toolchain-buster-8 main \
 # Build TVM
 RUN cd /usr && git clone https://github.com/apache/incubator-tvm.git tvm --recursive
 WORKDIR /usr/tvm
-RUN git checkout 331f6fd012763438c6d756be051b6e2c8a96f61c
+RUN git checkout 0aa4d6a4427e6e05bc9b526116ae9c7a894935f7
 RUN echo 'set(USE_LLVM llvm-config-8)' >> config.cmake
 RUN echo 'set(USE_RPC ON)' >> config.cmake
 RUN echo 'set(USE_SORT ON)' >> config.cmake
