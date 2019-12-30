@@ -20,6 +20,7 @@ import tvm
 import numpy as np
 from tvm import relay
 from .change_dtype import change_dtype, convert_ndarray
+from time import time
 
 
 def run_model(get_workload,
@@ -28,6 +29,10 @@ def run_model(get_workload,
               dst_dtype,
               rtol=0.0001,
               atol=0.0001):
+    """
+
+    :return: a tuple of the time taken to run the workload using
+             src_dtype and dst_dtype"""
     module, params = get_workload()
 
     ex = relay.create_executor("graph")
@@ -35,8 +40,10 @@ def run_model(get_workload,
     # Convert the input into the correct format.
     input = tvm.nd.array(np.random.rand(*input_shape).astype(src_dtype))
 
-    correct = relay.create_executor("graph", module).evaluate()(input,
-                                                                **params)
+    correct_prog = relay.create_executor("graph", module).evaluate()
+    correct_time_start = time()
+    correct = correct_prog(input, **params)
+    correct_time = time() - correct_time_start
 
     # Simplifying inference is essential right now, as batch norms (which get
     # removed) are broken with custom datatypes.
@@ -48,10 +55,15 @@ def run_model(get_workload,
 
     # Vectorization is not implemented with custom datatypes.
     with tvm.build_config(disable_vectorize=True):
-        result = ex.evaluate(expr)(input, **params)
+        dst_dtype_prog = ex.evaluate(expr)
+        dst_dtype_time_start = time()
+        dst_dtype_result = dst_dtype_prog(input, **params)
+        dst_dtype_time = time() - dst_dtype_time_start
 
-    tvm.testing.assert_allclose(convert_ndarray(src_dtype, result,
+    tvm.testing.assert_allclose(convert_ndarray(src_dtype, dst_dtype_result,
                                                 ex).asnumpy(),
                                 correct.asnumpy(),
                                 rtol=rtol,
                                 atol=atol)
+
+    return (correct_time, dst_dtype_time)
