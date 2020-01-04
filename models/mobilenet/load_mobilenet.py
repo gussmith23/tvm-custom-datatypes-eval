@@ -5,10 +5,6 @@ from tvm.relay.testing.mobilenet import get_workload as get_mobilenet
 from tensorflow.python.training import py_checkpoint_reader
 
 
-vars = tf.train.list_variables('./mobilenet_v1_1.0_224.ckpt')
-for var in vars:
-    print(var)
-
 def get_tf_param_name(relay_param_name):
     """Convert relay param name into tf param name"""
 
