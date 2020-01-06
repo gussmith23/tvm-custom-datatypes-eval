@@ -3,9 +3,13 @@ import tvm
 from tvm import relay
 from tvm.relay.testing.mobilenet import get_workload as get_mobilenet
 from tensorflow.python.training import py_checkpoint_reader
+from os.path import abspath, join, dirname
 
 
-def load_mobilenet_params():
+def load_mobilenet():
+
+    image_shape = (224, 224, 3)
+
     def get_tf_param_name(relay_param_name):
         """Convert relay param name into tf param name"""
 
@@ -25,7 +29,7 @@ def load_mobilenet_params():
 
         import re
         match = re.match('^separable_conv_block_(?P<layernum>\d+)_(?P<op>.*)$',
-                        relay_param_name)
+                         relay_param_name)
         if not match:
             raise ValueError(
                 'Unexpected variable name: {}'.format(relay_param_name))
@@ -66,20 +70,22 @@ def load_mobilenet_params():
             raise ValueError('Unexpected or None value for op: {}'.format(
                 match.group('op')))
 
-        return 'MobilenetV1/Conv2d_{}_{}/{}'.format(layer_num, depth_or_point, op)
+        return 'MobilenetV1/Conv2d_{}_{}/{}'.format(layer_num, depth_or_point,
+                                                    op)
 
-
-    # Make sure to set the layout and image shape to match TF style
+    # Make sure to set the layout, image shape, num classes to match TF style
     module, params = get_mobilenet(layout='NHWC',
-                                image_shape=(224, 224, 3),
-                                num_classes=1001)
+                                   image_shape=image_shape,
+                                   num_classes=1001)
     module = tvm.relay.transform.SimplifyInference()(module)
     module = tvm.relay.transform.DeadCodeElimination()(module)
     free_vars = tvm.relay.analysis.free_vars(module['main'].body)
+    # Skip data
+    assert free_vars[0].name_hint == 'data'
     free_vars = free_vars[1:]
 
     reader = py_checkpoint_reader.NewCheckpointReader(
-        './mobilenet_v1_1.0_224.ckpt')
+        join(dirname(abspath(__file__)), 'mobilenet_v1_1.0_224.ckpt'))
 
     # Maps strings to NDArrays, like the old `params` object, but the NDArrays are
     # the trained parameters.
@@ -100,4 +106,4 @@ def load_mobilenet_params():
 
         new_params[name] = tf_tensor
 
-    return new_params
+    return module, new_params, image_shape
