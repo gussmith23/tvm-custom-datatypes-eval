@@ -3,6 +3,7 @@ import re
 import tvm
 from tvm import relay
 from tvm.relay.testing.mobilenet import get_workload as get_mobilenet
+from os.path import abspath, dirname, join
 
 
 def load_mobilenet():
@@ -82,7 +83,7 @@ def load_mobilenet():
         return 'module.layers.{}.{}'.format(layer_num, op)
 
 
-    model = torch.load('./ckpt.pth', map_location=torch.device('cpu'))
+    model = torch.load(join(dirname(abspath(__file__)), 'ckpt.pth'), map_location=torch.device('cpu'))
 
     # Make sure to correctly set the layout, image shape, num classes
     module, params = get_mobilenet(layout='NCHW',
