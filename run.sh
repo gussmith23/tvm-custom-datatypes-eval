@@ -12,5 +12,8 @@ fi
 logdir="$basedir/$(TZ=UTC date +%Y-%m-%d_%H-%M-%SZ)"
 mkdir -p $logdir
 
-python3 ./tests/test-basic.py > "$logdir/test-basic.log"
-python3 ./tests/test1.py > "$logdir/test1.log"
+for test in $(ls -1 ./tests/test-*); do
+    filename=$(basename "$test")
+    filename="${filename%.py}"
+    python3 "$test" > "$logdir/$filename.log"
+done
