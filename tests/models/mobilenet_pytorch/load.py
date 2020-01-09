@@ -91,10 +91,6 @@ def load_mobilenet():
                                     num_classes=10)
     module = tvm.relay.transform.SimplifyInference()(module)
     module = tvm.relay.transform.DeadCodeElimination()(module)
-    free_vars = tvm.relay.analysis.free_vars(module['main'].body)
-    # Skip data
-    assert free_vars[0].name_hint == 'data'
-    free_vars = free_vars[1:]
 
     # Maps strings to NDArrays, like the old `params` object, but the NDArrays are
     # the trained parameters.
