@@ -7,9 +7,15 @@ import numpy as np
 # Copied from https://github.com/kuangliu/pytorch-cifar/blob/ab908327d44bf9b1d22cd333a4466e85083d3f21/main.py#L36
 transform = torchvision.transforms.Compose([
     torchvision.transforms.ToTensor(),
-    torchvision.transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    torchvision.transforms.Normalize((0.4914, 0.4822, 0.4465),
+                                     (0.2023, 0.1994, 0.2010)),
 ])
-dataset = torchvision.datasets.CIFAR10('.', train=False, download=True, transform=transform)
+# The repo I used to generate the trained params also uses torchvision's data
+# loader, but with train=True.
+dataset = torchvision.datasets.CIFAR10('.',
+                                       train=False,
+                                       download=True,
+                                       transform=transform)
 
 module, params, image_shape = load_mobilenet()
 
@@ -20,11 +26,11 @@ tested = 0
 correct = 0
 for image, target_class in dataset:
     # Add batch dimension
-    image = np.expand_dims(image.numpy(), axis=0)
-    logits = mobilenet(image, **params).asnumpy()
-    argmax = np.argmax(logits)
+    image_tvm = np.expand_dims(image.numpy(), axis=0)
+    argmax_tvm = np.argmax(mobilenet(image_tvm, **params).asnumpy())
 
     tested += 1
-    if (argmax == target_class): correct += 1
+    if (argmax_tvm == target_class): correct += 1
 
-    print('{} of {} correct ({})'.format(correct, tested, (correct/tested*100.0)))
+print('Model accuracy:')
+print(correct / tested)
