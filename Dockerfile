@@ -5,8 +5,6 @@ FROM python:3.7
 RUN apt update && apt install -y --no-install-recommends git libgtest-dev cmake wget unzip libtinfo-dev libz-dev \
      libcurl4-openssl-dev libopenblas-dev g++ sudo python3-dev
 
-RUN pip3 install torch==1.3.1+cpu torchvision==0.4.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
-
 # LLVM
 RUN echo deb http://apt.llvm.org/buster/ llvm-toolchain-buster-8 main \
      >> /etc/apt/sources.list.d/llvm.list && \
@@ -45,6 +43,7 @@ ENV PYTHON_PACKAGES="\
 "
 RUN pip3 install --upgrade pip
 RUN pip3 install $PYTHON_PACKAGES
+RUN pip3 install torch==1.3.1+cpu torchvision==0.4.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
 WORKDIR /root
 
