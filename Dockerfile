@@ -33,13 +33,15 @@ RUN bash -c \
 ENV PYTHONPATH=/usr/tvm/python:/usr/tvm/topi/python:${PYTHONPATH}
 
 # Set up Python
+# Pin specific Pillow version because of:
+# https://github.com/pytorch/vision/issues/1714
 ENV PYTHON_PACKAGES="\
     numpy \
     nose \
     decorator \
     scipy \
     mxnet \
-    Pillow \
+    Pillow=6.2.2 \
 "
 RUN pip3 install --upgrade pip
 RUN pip3 install $PYTHON_PACKAGES
