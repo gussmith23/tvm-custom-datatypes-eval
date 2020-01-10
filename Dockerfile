@@ -13,6 +13,7 @@ RUN echo deb http://apt.llvm.org/buster/ llvm-toolchain-buster-8 main \
 # Build Gus's version of TVM
 RUN cd /usr && git clone https://github.com/gussmith23/tvm.git tvm --recursive
 WORKDIR /usr/tvm
+RUN git fetch
 RUN git checkout 6aea21376381f7eb2bcbb2c25629ec131267a163
 RUN git submodule sync && git submodule update
 RUN echo 'set(USE_LLVM llvm-config-8)' >> config.cmake
