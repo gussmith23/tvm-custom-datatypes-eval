@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:latest
 
 # Install deps
 RUN apt update && apt install -y --no-install-recommends git libgtest-dev cmake wget unzip libtinfo-dev libz-dev \
