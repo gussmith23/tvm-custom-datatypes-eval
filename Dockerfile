@@ -41,7 +41,7 @@ ENV PYTHON_PACKAGES="\
     decorator \
     scipy \
     mxnet \
-    Pillow=6.2.2 \
+    Pillow==6.2.2 \
 "
 RUN pip3 install --upgrade pip
 RUN pip3 install $PYTHON_PACKAGES
