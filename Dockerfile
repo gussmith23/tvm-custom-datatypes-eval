@@ -32,14 +32,13 @@ RUN bash -c \
 ENV PYTHONPATH=/usr/tvm/python:/usr/tvm/topi/python:${PYTHONPATH}
 
 # Set up Python
+RUN pip3 install torch==1.3.1+cpu torchvision==0.4.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
 ENV PYTHON_PACKAGES="\
     numpy \
     nose \
     decorator \
     scipy \
     mxnet \
-    torch \
-    torchvision \
 "
 RUN pip3 install --upgrade pip
 RUN pip3 install $PYTHON_PACKAGES
