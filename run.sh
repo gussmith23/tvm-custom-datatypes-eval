@@ -15,5 +15,6 @@ mkdir -p $logdir
 for test in $(ls -1 ./tests/test-*); do
     filename=$(basename "$test")
     filename="${filename%.py}"
+    echo "Running $filename"
     python3 "$test" > "$logdir/$filename.log"
 done

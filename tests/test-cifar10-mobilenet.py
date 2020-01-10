@@ -3,6 +3,7 @@ from tvm import relay
 import torchvision
 from models.mobilenet_pytorch.load import load_mobilenet
 import numpy as np
+from sys import stderr
 
 # Copied from https://github.com/kuangliu/pytorch-cifar/blob/ab908327d44bf9b1d22cd333a4466e85083d3f21/main.py#L36
 transform = torchvision.transforms.Compose([
@@ -31,6 +32,8 @@ for image, target_class in dataset:
 
     tested += 1
     if (argmax_tvm == target_class): correct += 1
+    print('{} of {} correct ({})'.format(correct, tested, correct / tested),
+          file=stderr)
 
 print('Model accuracy:')
 print(correct / tested)
