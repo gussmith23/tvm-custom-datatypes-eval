@@ -1,4 +1,5 @@
-FROM python:latest
+# Pytorch doesn't work with 3.8
+FROM python:3.7
 
 # Install deps
 RUN apt update && apt install -y --no-install-recommends git libgtest-dev cmake wget unzip libtinfo-dev libz-dev \
