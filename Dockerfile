@@ -38,6 +38,7 @@ ENV PYTHON_PACKAGES="\
     decorator \
     scipy \
     mxnet \
+    torch \
     torchvision \
 "
 RUN pip3 install --upgrade pip
