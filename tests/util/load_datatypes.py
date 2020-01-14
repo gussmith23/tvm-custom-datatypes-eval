@@ -195,7 +195,41 @@ def load_posit32():
     minimum_func = lambda _: -1.79769e+308
 
     load_datatype('posit32',
-                  131,
+                  132,
+                  library_path,
+                  casts_from_this_type_map,
+                  casts_to_this_type_map,
+                  op_map,
+                  intrinsic_map,
+                  minimum_func=minimum_func)
+
+def load_float32():
+    library_path = path.join(path.abspath(path.dirname(__file__)),
+                             '../../datatypes/float32/float32.so')
+    casts_from_this_type_map = {
+        'float': tvm.datatype.create_lower_func("OurFloat32ToFloat"),
+    }
+    casts_to_this_type_map = {
+        'float': tvm.datatype.create_lower_func("FloatToOurFloat32"),
+        'int': tvm.datatype.create_lower_func("IntToOurFloat32"),
+    }
+    op_map = {
+        'Add': tvm.datatype.create_lower_func("OurFloat32Add"),
+        'Sub': tvm.datatype.create_lower_func("OurFloat32Sub"),
+        'FloatImm': tvm.datatype.create_lower_func("FloatToOurFloat32"),
+        'Mul': tvm.datatype.create_lower_func("OurFloat32Mul"),
+        'Div': tvm.datatype.create_lower_func("OurFloat32Div"),
+        'Max': tvm.datatype.create_lower_func("OurFloat32Max"),
+    }
+    intrinsic_map = {
+        'sqrt': tvm.datatype.create_lower_func("OurFloat32Sqrt"),
+        'tvm_if_then_else': tvm.datatype.lower_ite,
+        'exp': tvm.datatype.create_lower_func("OurFloat32Exp"),
+    }
+    minimum_func = lambda _: -3.40282e+38
+
+    load_datatype('float32',
+                  133,
                   library_path,
                   casts_from_this_type_map,
                   casts_to_this_type_map,
