@@ -107,63 +107,63 @@ void BFloat16Exp(const uint16_t* a, uint16_t* dst, size_t size) {
 }
 
 extern "C" {
-uint16_t FloatToBFloat16_wrapper(float in) {
+uint16_t _FloatToBFloat16_wrapper(float in) {
   uint16_t out;
   FloatToBFloat16(&in, &out, 1);
   return out;
 }
 
-float BFloat16ToFloat_wrapper(uint16_t in) {
+float _BFloat16ToFloat_wrapper(uint16_t in) {
   float out;
   BFloat16ToFloat(&in, &out, 1);
   return out;
 }
 
   // TODO How do we know what size it is?
-uint16_t IntToBFloat16_wrapper(int in) {
+uint16_t _IntToBFloat16_wrapper(int in) {
   uint16_t out;
   float in_f = (float)in;
   FloatToBFloat16(&in_f, &out, 1);
   return out;
 }
 
-uint16_t BFloat16Add_wrapper(uint16_t a, uint16_t b) {
+uint16_t _BFloat16Add_wrapper(uint16_t a, uint16_t b) {
   uint16_t out;
   BFloat16Add(&a, &b, &out, 1);
   return out;
 }
 
-uint16_t BFloat16Sub_wrapper(uint16_t a, uint16_t b) {
+uint16_t _BFloat16Sub_wrapper(uint16_t a, uint16_t b) {
   uint16_t out;
   BFloat16Sub(&a, &b, &out, 1);
   return out;
 }
 
-uint16_t BFloat16Mul_wrapper(uint16_t a, uint16_t b) {
+uint16_t _BFloat16Mul_wrapper(uint16_t a, uint16_t b) {
   uint16_t out;
   BFloat16Mul(&a, &b, &out, 1);
   return out;
 }
 
-uint16_t BFloat16Div_wrapper(uint16_t a, uint16_t b) {
+uint16_t _BFloat16Div_wrapper(uint16_t a, uint16_t b) {
   uint16_t out;
   BFloat16Div(&a, &b, &out, 1);
   return out;
 }
 
-uint16_t BFloat16Max_wrapper(uint16_t a, uint16_t b) {
+uint16_t _BFloat16Max_wrapper(uint16_t a, uint16_t b) {
   uint16_t out;
   BFloat16Max(&a, &b, &out, 1);
   return out;
 }
 
-uint16_t BFloat16Sqrt_wrapper(uint16_t a) {
+uint16_t _BFloat16Sqrt_wrapper(uint16_t a) {
   uint16_t out;
   BFloat16Sqrt(&a, &out, 1);
   return out;
 }
 
-uint16_t BFloat16Exp_wrapper(uint16_t a) {
+uint16_t _BFloat16Exp_wrapper(uint16_t a) {
   uint16_t out;
   BFloat16Exp(&a, &out, 1);
   return out;
@@ -245,62 +245,62 @@ void NotBFloat16Exp(const uint32_t* a, uint32_t* dst, size_t size) {
 }
 
 extern "C" {
-uint32_t FloatToNotBFloat16_wrapper(float in) {
+uint32_t _FloatToNotBFloat16_wrapper(float in) {
   uint32_t out;
   FloatToNotBFloat16(&in, &out, 1);
   return out;
 }
 
-float NotBFloat16ToFloat_wrapper(uint32_t in) {
+float _NotBFloat16ToFloat_wrapper(uint32_t in) {
   float out;
   NotBFloat16ToFloat(&in, &out, 1);
   return out;
 }
 
-uint32_t IntToNotBFloat16_wrapper(int in) {
+uint32_t _IntToNotBFloat16_wrapper(int in) {
   uint32_t out;
   float in_f = (float)in;
   FloatToNotBFloat16(&in_f, &out, 1);
   return out;
 }
 
-uint32_t NotBFloat16Add_wrapper(uint32_t a, uint32_t b) {
+uint32_t _NotBFloat16Add_wrapper(uint32_t a, uint32_t b) {
   uint32_t out;
   NotBFloat16Add(&a, &b, &out, 1);
   return out;
 }
 
-uint32_t NotBFloat16Sub_wrapper(uint32_t a, uint32_t b) {
+uint32_t _NotBFloat16Sub_wrapper(uint32_t a, uint32_t b) {
   uint32_t out;
   NotBFloat16Sub(&a, &b, &out, 1);
   return out;
 }
 
-uint32_t NotBFloat16Mul_wrapper(uint32_t a, uint32_t b) {
+uint32_t _NotBFloat16Mul_wrapper(uint32_t a, uint32_t b) {
   uint32_t out;
   NotBFloat16Mul(&a, &b, &out, 1);
   return out;
 }
 
-uint32_t NotBFloat16Div_wrapper(uint32_t a, uint32_t b) {
+uint32_t _NotBFloat16Div_wrapper(uint32_t a, uint32_t b) {
   uint32_t out;
   NotBFloat16Div(&a, &b, &out, 1);
   return out;
 }
 
-uint32_t NotBFloat16Max_wrapper(uint32_t a, uint32_t b) {
+uint32_t _NotBFloat16Max_wrapper(uint32_t a, uint32_t b) {
   uint32_t out;
   NotBFloat16Max(&a, &b, &out, 1);
   return out;
 }
 
-uint32_t NotBFloat16Sqrt_wrapper(uint32_t a) {
+uint32_t _NotBFloat16Sqrt_wrapper(uint32_t a) {
   uint32_t out;
   NotBFloat16Sqrt(&a, &out, 1);
   return out;
 }
 
-uint32_t NotBFloat16Exp_wrapper(uint32_t a) {
+uint32_t _NotBFloat16Exp_wrapper(uint32_t a) {
   uint32_t out;
   NotBFloat16Exp(&a, &out, 1);
   return out;
