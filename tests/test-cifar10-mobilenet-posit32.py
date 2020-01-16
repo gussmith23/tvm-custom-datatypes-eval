@@ -82,7 +82,8 @@ for image, target_class in dataset:
     image_tvm = np.expand_dims(image.numpy().astype('float32'), axis=0)
 
     # Change datatype of input
-    image_tvm = convert_ndarray('custom[posit32]32', image_tvm, conversion_executor)
+    image_tvm = convert_ndarray('custom[posit32]32', image_tvm,
+                                conversion_executor)
 
     with tvm.build_config(disable_vectorize=True):
         output = mobilenet(image_tvm, **params)
