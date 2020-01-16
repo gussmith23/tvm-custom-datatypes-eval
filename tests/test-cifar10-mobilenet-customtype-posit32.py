@@ -3,11 +3,11 @@ from tvm import relay
 import torchvision
 from models.mobilenet_pytorch.load import load_mobilenet
 import numpy as np
-from sys import stderr
 from util.load_datatypes import load_posit32
 from util.change_dtype import change_dtype, convert_ndarray
 from ctypes import CDLL, RTLD_GLOBAL
 from os import path
+from util.run_pretrained_model_test import run_pretrained_model_test
 
 # Copied from https://github.com/kuangliu/pytorch-cifar/blob/ab908327d44bf9b1d22cd333a4466e85083d3f21/main.py#L36
 transform = torchvision.transforms.Compose([
@@ -73,32 +73,4 @@ expr, params = change_dtype('float32', 'custom[posit32]32', module['main'],
                             params, conversion_executor)
 module = relay.module.Module.from_expr(expr)
 
-ex = relay.create_executor(mod=module)
-mobilenet = ex.evaluate()
-
-tested = 0
-correct = 0
-for image, target_class in dataset:
-    # Add batch dimension
-    image_tvm = np.expand_dims(image.numpy().astype('float32'), axis=0)
-
-    # Change datatype of input
-    image_tvm = convert_ndarray('custom[posit32]32', image_tvm,
-                                conversion_executor)
-
-    with tvm.build_config(disable_vectorize=True):
-        output = mobilenet(image_tvm, **params)
-        output = output.data
-
-    # convert output
-    output = convert_ndarray('float32', output, conversion_executor)
-
-    argmax_tvm = np.argmax(output.asnumpy())
-
-    tested += 1
-    if (argmax_tvm == target_class): correct += 1
-    print('{} of {} correct ({})'.format(correct, tested, correct / tested),
-          file=stderr)
-
-print('Model accuracy:')
-print(correct / tested)
+run_pretrained_model_test(module, params, dataset, 'custom[posit32]32')
