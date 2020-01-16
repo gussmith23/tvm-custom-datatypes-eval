@@ -29,7 +29,11 @@ def load_datatype(dtype,
       lowering funcs similar to above
     minimum_func: minimum function needed by
       tvm.datatype.register_min_func
-    """
+
+    TODO(gus) these utilities are broken right now. I'm unsure how, but
+    these seem to load the types...incorrectly, somehow. I need to dig more
+    into it, but for now I'm just going to not use them."""
+    assert False, "Do not use this; broken; see note above."
 
     tvm.datatype.register(dtype, code)
     CDLL(library_path, RTLD_GLOBAL)
