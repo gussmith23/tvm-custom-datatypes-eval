@@ -62,8 +62,9 @@ tvm.datatype.register_op(tvm.datatype.create_lower_func("_Posit16es1Exp"),
                          "llvm",
                          "posit16",
                          intrinsic_name="exp")
-# TODO(gus) these aren't actually right. these are double min(actually lowest)/max.
-tvm.datatype.register_min_func(lambda num_bits: -1.79769e+308, "posit16")
+# es = 1, useed = 4. first bit is sign bit, then 15 bits of '1' for the regime
+# gives us a k value of 14. Then our number is 4**14
+tvm.datatype.register_min_func(lambda num_bits: -268435456, "posit16")
 
 # Change the datatype
 conversion_executor = relay.create_executor()
