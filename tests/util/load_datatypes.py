@@ -94,8 +94,9 @@ def load_bfloat():
 
 
 def load_posit8():
-    library_path = path.join(path.abspath(path.dirname(__file__)),
-                             '../../datatypes/universal-wrapper/universal-wrapper.so')
+    library_path = path.join(
+        path.abspath(path.dirname(__file__)),
+        '../../datatypes/universal-wrapper/universal-wrapper.so')
     casts_from_this_type_map = {
         'float': tvm.datatype.create_lower_func("_Posit8es0ToFloat"),
     }
@@ -131,8 +132,9 @@ def load_posit8():
 
 
 def load_posit16():
-    library_path = path.join(path.abspath(path.dirname(__file__)),
-                             '../../datatypes/universal-wrapper/universal-wrapper.so')
+    library_path = path.join(
+        path.abspath(path.dirname(__file__)),
+        '../../datatypes/universal-wrapper/universal-wrapper.so')
     casts_from_this_type_map = {
         'float': tvm.datatype.create_lower_func("_Posit16es1ToFloat"),
     }
@@ -168,8 +170,9 @@ def load_posit16():
 
 
 def load_posit32():
-    library_path = path.join(path.abspath(path.dirname(__file__)),
-                             '../../datatypes/universal-wrapper/universal-wrapper.so')
+    library_path = path.join(
+        path.abspath(path.dirname(__file__)),
+        '../../datatypes/universal-wrapper/universal-wrapper.so')
     casts_from_this_type_map = {
         'float': tvm.datatype.create_lower_func("_Posit32es2ToFloat"),
     }
@@ -202,6 +205,7 @@ def load_posit32():
                   op_map,
                   intrinsic_map,
                   minimum_func=minimum_func)
+
 
 def load_float32():
     library_path = path.join(path.abspath(path.dirname(__file__)),
