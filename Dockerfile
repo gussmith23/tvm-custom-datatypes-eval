@@ -32,22 +32,13 @@ RUN bash -c \
      make -j2"
 ENV PYTHONPATH=/usr/tvm/python:/usr/tvm/topi/python:${PYTHONPATH}
 
-# Set up Python
-# Pin specific Pillow version because of:
-# https://github.com/pytorch/vision/issues/1714
-ENV PYTHON_PACKAGES="\
-    numpy \
-    nose \
-    decorator \
-    scipy \
-    mxnet \
-    Pillow==6.2.2 \
-"
-RUN pip3 install --upgrade pip
-RUN pip3 install $PYTHON_PACKAGES
-RUN pip3 install torch==1.3.1+cpu torchvision==0.4.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
-
 WORKDIR /root
+
+# Set up Python
+RUN pip3 install --upgrade pip
+COPY ./requirements.txt ./requirements.txt
+RUN pip3 install -r requirements.txt
+RUN pip3 install torch==1.3.1+cpu torchvision==0.4.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
 # Set up datatypes
 COPY Makefile Makefile
