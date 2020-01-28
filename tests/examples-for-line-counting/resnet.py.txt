@@ -1,0 +1,145 @@
+import tvm
+from tvm import relay
+import torchvision
+from models.resnet50.load import load_resnet50
+import numpy as np
+from util.change_dtype import change_dtype, convert_ndarray
+from util.run_pretrained_model_test import run_pretrained_model_test
+from util.load_datatypes import load_bfloat16
+from ctypes import CDLL, RTLD_GLOBAL
+from os import path
+from time import perf_counter_ns
+from sys import stderr
+
+NUM_INFERENCES = 100
+
+# Load the datatype manually
+# START COUNTING
+CDLL(
+    path.join(path.abspath(path.dirname(__file__)),
+                '../datatypes/bfloat16/bfloat16.so'), RTLD_GLOBAL)
+tvm.datatype.register("bfloat16", 129)
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_FloatToBFloat16_wrapper"), "Cast",
+    "llvm", "bfloat16", "float")
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_BFloat16ToFloat_wrapper"), "Cast",
+    "llvm", "float", "bfloat16")
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_IntToBFloat16_wrapper"), "Cast",
+    "llvm", "bfloat16", "int")
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_BFloat16Add_wrapper"), "Add", "llvm",
+    "bfloat16")
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_BFloat16Sub_wrapper"), "Sub", "llvm",
+    "bfloat16")
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_FloatToBFloat16_wrapper"), "FloatImm",
+    "llvm", "bfloat16")
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_BFloat16Mul_wrapper"), "Mul", "llvm",
+    "bfloat16")
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_BFloat16Div_wrapper"), "Div", "llvm",
+    "bfloat16")
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_BFloat16Max_wrapper"), "Max", "llvm",
+    "bfloat16")
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_BFloat16Sqrt_wrapper"),
+    "Call",
+    "llvm",
+    "bfloat16",
+    intrinsic_name="sqrt")
+tvm.datatype.register_op(tvm.datatype.lower_ite,
+                            "Call",
+                            "llvm",
+                            "bfloat16",
+                            intrinsic_name="tvm_if_then_else")
+tvm.datatype.register_op(
+    tvm.datatype.create_lower_func("_BFloat16Exp_wrapper"),
+    "Call",
+    "llvm",
+    "bfloat16",
+    intrinsic_name="exp")
+tvm.datatype.register_min_func(lambda num_bits: -3.38953139e38, "bfloat16")
+# STOP COUNTING
+
+# Copied from https://github.com/kuangliu/pytorch-cifar/blob/ab908327d44bf9b1d22cd333a4466e85083d3f21/main.py#L36
+transform = torchvision.transforms.Compose([
+    torchvision.transforms.ToTensor(),
+    torchvision.transforms.Normalize((0.4914, 0.4822, 0.4465),
+                                     (0.2023, 0.1994, 0.2010)),
+])
+# The repo I used to generate the trained params also uses torchvision's data
+# loader, but with train=True.
+dataset = torchvision.datasets.CIFAR10('.',
+                                       train=False,
+                                       download=True,
+                                       transform=transform)
+
+module, params, image_shape = load_resnet50()
+
+# Change the datatype
+# START COUNTING
+conversion_executor = relay.create_executor()
+expr, params = change_dtype('float32', 'custom[bfloat16]16', module['main'],
+                            params, conversion_executor)
+module = relay.module.Module.from_expr(expr)
+# STOP COUNTING
+
+# START COUNTING
+dtype = 'custom[bfloat16]16'
+# STOP COUNTING
+
+conversion_executor = relay.create_executor()
+ex = relay.create_executor(mod=module)
+model = ex.evaluate()
+
+columns = ['inference time (ns)', 'output class number', 'expected class number', 'output correct?']
+print(','.join(columns))
+
+tested = 0
+correct = 0
+# Only do a certain number of inferences, to save time
+for image, target_class in list(dataset)[:NUM_INFERENCES]:
+    # Add batch dimension
+    image_tvm = np.expand_dims(image.numpy().astype('float32'), axis=0)
+
+    # Change datatype of input
+    # START COUNTING
+    image_tvm = convert_ndarray(dtype, image_tvm, conversion_executor)
+    # STOP COUNTING
+
+    # START COUNTING (need to disable vectorization)
+    with tvm.build_config(disable_vectorize=True):
+        # STOP COUNTING
+        start = perf_counter_ns()
+        output = model(image_tvm, **params)
+        elapsed = perf_counter_ns() - start
+        output = output.data
+
+    # convert output
+    # START COUNTING
+    output = convert_ndarray('float32', output, conversion_executor)
+    # STOP COUNTING
+
+    argmax_tvm = np.argmax(output.asnumpy())
+
+    tested += 1
+    if (argmax_tvm == target_class): correct += 1
+    print('{} of {} correct ({})'.format(correct, tested,
+                                            correct / tested),
+            file=stderr)
+
+    data = {
+        'inference time (ns)': elapsed,
+        'output class number': argmax_tvm,
+        'expected class number': target_class,
+        'output correct?': int(argmax_tvm == target_class)
+    }
+    print(','.join([str(data[column]) for column in columns]))
+
+print('Model accuracy:')
+print(correct / tested)
