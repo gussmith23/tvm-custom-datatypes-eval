@@ -1,6 +1,6 @@
-#include "universal/posit/posit.hpp"
-#include "universal/posit/math/sqrt.hpp"
 #include "universal/posit/math/exponent.hpp"
+#include "universal/posit/math/sqrt.hpp"
+#include "universal/posit/posit.hpp"
 #include <cstdint>
 
 // The extern "C" functions in this file are named with an underscore so as not
