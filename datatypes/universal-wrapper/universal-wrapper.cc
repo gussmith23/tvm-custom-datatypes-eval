@@ -1,6 +1,10 @@
-#include "universal/posit/math/exponent.hpp"
-#include "universal/posit/math/sqrt.hpp"
-#include "universal/posit/posit.hpp"
+// Configure the posit template environment
+#define POSIT_FAST_POSIT_32_2 1
+#define POSIT_FAST_POSIT_16_1 1
+#define POSIT_FAST_POSIT_8_0 1
+#define POSIT_THROW_ARITHMETIC_EXCEPTION 0
+
+#include "universal/posit/posit"
 #include <cstdint>
 
 // The extern "C" functions in this file are named with an underscore so as not
