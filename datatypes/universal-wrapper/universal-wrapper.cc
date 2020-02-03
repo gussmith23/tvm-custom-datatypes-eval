@@ -1,5 +1,6 @@
 // Configure the posit template environment
-#define POSIT_FAST_POSIT_32_2 1
+// TODO(gus) have to disable 32 bit; segfaults when enabled, not sure why.
+#define POSIT_FAST_POSIT_32_2 0
 #define POSIT_FAST_POSIT_16_1 1
 #define POSIT_FAST_POSIT_8_0 1
 #define POSIT_THROW_ARITHMETIC_EXCEPTION 0
