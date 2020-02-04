@@ -7,7 +7,12 @@ from time import perf_counter_ns
 
 NUM_INFERENCES=100
 
-def run_pretrained_model_test(module, params, dataset, dtype):
+
+def run_pretrained_model_test(module,
+                              params,
+                              dataset,
+                              dtype,
+                              num_inferences=NUM_INFERENCES):
     conversion_executor = relay.create_executor()
     ex = relay.create_executor(mod=module)
     model = ex.evaluate()
@@ -18,7 +23,7 @@ def run_pretrained_model_test(module, params, dataset, dtype):
     tested = 0
     correct = 0
     # Only do a certain number of inferences, to save time
-    for image, target_class in list(dataset)[:NUM_INFERENCES]:
+    for image, target_class in list(dataset)[:num_inferences]:
         # Add batch dimension
         image_tvm = np.expand_dims(image.numpy().astype('float32'), axis=0)
 

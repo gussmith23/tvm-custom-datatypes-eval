@@ -1,0 +1,41 @@
+import tvm
+from tvm import relay
+import torchvision
+from models.mobilenet_pytorch.load import load_mobilenet
+import numpy as np
+from util.change_dtype import change_dtype, convert_ndarray
+from util.run_pretrained_model_test import run_pretrained_model_test
+from util.load_datatypes import load_counted_float32
+
+# Copied from https://github.com/kuangliu/pytorch-cifar/blob/ab908327d44bf9b1d22cd333a4466e85083d3f21/main.py#L36
+transform = torchvision.transforms.Compose([
+    torchvision.transforms.ToTensor(),
+    torchvision.transforms.Normalize((0.4914, 0.4822, 0.4465),
+                                     (0.2023, 0.1994, 0.2010)),
+])
+# The repo I used to generate the trained params also uses torchvision's data
+# loader, but with train=True.
+dataset = torchvision.datasets.CIFAR10('.',
+                                       train=False,
+                                       download=True,
+                                       transform=transform)
+
+module, params, image_shape = load_mobilenet()
+
+dll = load_counted_float32()
+
+# Change the datatype
+conversion_executor = relay.create_executor()
+expr, params = change_dtype('float32', 'custom[countedfloat32]32', module['main'],
+                            params, conversion_executor)
+module = relay.module.Module.from_expr(expr)
+
+run_pretrained_model_test(module, params, dataset, 'custom[countedfloat32]32', num_inferences=1)
+
+print(dll.GetNumAdds())
+print(dll.GetNumSubs())
+print(dll.GetNumMuls())
+print(dll.GetNumDivs())
+print(dll.GetNumMaxes())
+print(dll.GetNumSqrts())
+print(dll.GetNumExps())

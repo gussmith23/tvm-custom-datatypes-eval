@@ -289,3 +289,61 @@ def load_float32():
     # gives us a k value of 6. Then our number is 2**6.
     tvm.datatype.register_min_func(lambda num_bits: -3.4028235e+38,
                                    "ourfloat32")
+
+
+def load_counted_float32():
+    dll = CDLL(
+        path.join(path.abspath(path.dirname(__file__)),
+                  '../../datatypes/counted-float32/counted-float32.so'),
+        RTLD_GLOBAL)
+    tvm.datatype.register("countedfloat32", 132)
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("FloatToCountedFloat32"), "Cast",
+        "llvm", "countedfloat32", "float")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("CountedFloat32ToFloat"), "Cast",
+        "llvm", "float", "countedfloat32")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("IntToCountedFloat32"), "Cast", "llvm",
+        "countedfloat32", "int")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("CountedFloat32Add"), "Add", "llvm",
+        "countedfloat32")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("CountedFloat32Sub"), "Sub", "llvm",
+        "countedfloat32")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("FloatToCountedFloat32"), "FloatImm",
+        "llvm", "countedfloat32")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("CountedFloat32Mul"), "Mul", "llvm",
+        "countedfloat32")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("CountedFloat32Div"), "Div", "llvm",
+        "countedfloat32")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("CountedFloat32Max"), "Max", "llvm",
+        "countedfloat32")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("CountedFloat32Sqrt"),
+        "Call",
+        "llvm",
+        "countedfloat32",
+        intrinsic_name="sqrt")
+    tvm.datatype.register_op(tvm.datatype.lower_ite,
+                             "Call",
+                             "llvm",
+                             "countedfloat32",
+                             intrinsic_name="tvm_if_then_else")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("CountedFloat32Exp"),
+        "Call",
+        "llvm",
+        "countedfloat32",
+        intrinsic_name="exp")
+    # es = 0, useed = 2. first bit is sign bit, then 7 bits of '1' for the regime
+    # gives us a k value of 6. Then our number is 2**6.
+    tvm.datatype.register_min_func(lambda num_bits: -3.4028235e+38,
+                                   "countedfloat32")
+
+    return dll
