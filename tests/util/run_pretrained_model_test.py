@@ -5,7 +5,7 @@ from tvm import relay
 from .change_dtype import change_dtype, convert_ndarray
 from time import perf_counter_ns
 
-NUM_INFERENCES=100
+NUM_INFERENCES = 100
 
 
 def run_pretrained_model_test(module,
@@ -17,7 +17,10 @@ def run_pretrained_model_test(module,
     ex = relay.create_executor(mod=module)
     model = ex.evaluate()
 
-    columns = ['inference time (ns)', 'output class number', 'expected class number', 'output correct?']
+    columns = [
+        'inference time (ns)', 'output class number', 'expected class number',
+        'output correct?'
+    ]
     print(','.join(columns))
 
     tested = 0
