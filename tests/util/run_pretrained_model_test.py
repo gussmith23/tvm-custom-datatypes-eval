@@ -56,7 +56,7 @@ def run_pretrained_model_test(module,
             'expected class number': target_class,
             'output correct?': int(argmax_tvm == target_class)
         }
-        print(','.join([str(data[column]) for column in columns]))
+        print(','.join([str(data[column]) for column in columns]), flush=True)
 
     print('Model accuracy:')
     print(correct / tested)
