@@ -1,5 +1,9 @@
 // Configure the posit template environment
-// TODO(gus) have to disable 32 bit; segfaults when enabled, not sure why.
+// TODO(gus) have to disable 32 bit; segfaults on my Docker image when enabled,
+// not sure why.
+// Note: I can run the fast posit32 on my laptop. When I run it, it doesn't seem
+// to be any faster, and it actually produces different results. This is
+// worrying, but it makes me feel better about not enabling the fast version.
 #define POSIT_FAST_POSIT_32_2 0
 #define POSIT_FAST_POSIT_16_1 1
 #define POSIT_FAST_POSIT_8_0 1
