@@ -347,3 +347,145 @@ def load_counted_float32():
                                    "countedfloat32")
 
     return dll
+
+def load_libposit_posit8():
+    # Register datatype manually
+    CDLL(
+        path.join(path.abspath(path.dirname(__file__)),
+                  '../../datatypes/libposit/libposit-wrapper.so'),
+        RTLD_GLOBAL)
+    tvm.datatype.register("libposit-posit8", 131)
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("_FloatToLibPosit_Posit8es0"), "Cast", "llvm",
+        "libposit-posit8", "float")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("_LibPosit_Posit8es0_ToFloat"), "Cast", "llvm",
+        "float", "libposit-posit8")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_IntToLibPosit_Posit8es0"),
+                             "Cast", "llvm", "libposit-posit8", "int")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit8es0_Add"),
+                             "Add", "llvm", "libposit-posit8")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit8es0_Sub"),
+                             "Sub", "llvm", "libposit-posit8")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("_FloatToLibPosit_Posit8es0"), "FloatImm",
+        "llvm", "libposit-posit8")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit8es0_Mul"),
+                             "Mul", "llvm", "libposit-posit8")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit8es0_Div"),
+                             "Div", "llvm", "libposit-posit8")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit8es0_Max"),
+                             "Max", "llvm", "libposit-posit8")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit8es0_Sqrt"),
+                             "Call",
+                             "llvm",
+                             "libposit-posit8",
+                             intrinsic_name="sqrt")
+    tvm.datatype.register_op(tvm.datatype.lower_ite,
+                             "Call",
+                             "llvm",
+                             "libposit-posit8",
+                             intrinsic_name="tvm_if_then_else")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit8es0_Exp"),
+                             "Call",
+                             "llvm",
+                             "libposit-posit8",
+                             intrinsic_name="exp")
+    # es = 0, useed = 2. first bit is sign bit, then 7 bits of '1' for the regime
+    # gives us a k value of 6. Then our number is 2**6.
+    tvm.datatype.register_min_func(lambda num_bits: -64, "libposit-posit8")
+
+def load_libposit_posit16():
+    # Register datatype manually
+    CDLL(
+        path.join(path.abspath(path.dirname(__file__)),
+                  '../../datatypes/libposit/libposit-wrapper.so'),
+        RTLD_GLOBAL)
+    tvm.datatype.register("libposit-posit16", 131)
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("_FloatToLibPosit_Posit16es1"), "Cast", "llvm",
+        "libposit-posit16", "float")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("_LibPosit_Posit16es1_ToFloat"), "Cast", "llvm",
+        "float", "libposit-posit16")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_IntToLibPosit_Posit16es1"),
+                             "Cast", "llvm", "libposit-posit16", "int")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit16es1_Add"),
+                             "Add", "llvm", "libposit-posit16")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit16es1_Sub"),
+                             "Sub", "llvm", "libposit-posit16")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("_FloatToLibPosit_Posit16es1"), "FloatImm",
+        "llvm", "libposit-posit16")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit16es1_Mul"),
+                             "Mul", "llvm", "libposit-posit16")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit16es1_Div"),
+                             "Div", "llvm", "libposit-posit16")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit16es1_Max"),
+                             "Max", "llvm", "libposit-posit16")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit16es1_Sqrt"),
+                             "Call",
+                             "llvm",
+                             "libposit-posit16",
+                             intrinsic_name="sqrt")
+    tvm.datatype.register_op(tvm.datatype.lower_ite,
+                             "Call",
+                             "llvm",
+                             "libposit-posit16",
+                             intrinsic_name="tvm_if_then_else")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit16es1_Exp"),
+                             "Call",
+                             "llvm",
+                             "libposit-posit16",
+                             intrinsic_name="exp")
+    # es = 1, useed = 4. first bit is sign bit, then 15 bits of '1' for the regime
+    # gives us a k value of 14. Then our number is 4**14
+    tvm.datatype.register_min_func(lambda num_bits: -268435456, "libposit-posit16")
+
+
+def load_libposit_posit32():
+    # Register datatype manually
+    CDLL(
+        path.join(path.abspath(path.dirname(__file__)),
+                  '../../datatypes/libposit/libposit-wrapper.so'),
+        RTLD_GLOBAL)
+    tvm.datatype.register("libposit-posit32", 131)
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("_FloatToLibPosit_Posit32es2"), "Cast", "llvm",
+        "libposit-posit32", "float")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("_LibPosit_Posit32es2_ToFloat"), "Cast", "llvm",
+        "float", "libposit-posit32")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_IntToLibPosit_Posit32es2"),
+                             "Cast", "llvm", "libposit-posit32", "int")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit32es2_Add"),
+                             "Add", "llvm", "libposit-posit32")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit32es2_Sub"),
+                             "Sub", "llvm", "libposit-posit32")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("_FloatToLibPosit_Posit32es2"), "FloatImm",
+        "llvm", "libposit-posit32")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit32es2_Mul"),
+                             "Mul", "llvm", "libposit-posit32")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit32es2_Div"),
+                             "Div", "llvm", "libposit-posit32")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit32es2_Max"),
+                             "Max", "llvm", "libposit-posit32")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit32es2_Sqrt"),
+                             "Call",
+                             "llvm",
+                             "libposit-posit32",
+                             intrinsic_name="sqrt")
+    tvm.datatype.register_op(tvm.datatype.lower_ite,
+                             "Call",
+                             "llvm",
+                             "libposit-posit32",
+                             intrinsic_name="tvm_if_then_else")
+    tvm.datatype.register_op(tvm.datatype.create_lower_func("_LibPosit_Posit32es2_Exp"),
+                             "Call",
+                             "llvm",
+                             "libposit-posit32",
+                             intrinsic_name="exp")
+    # es = 2, useed = 16. first bit is sign bit, then 31 bits of '1' for the regime
+    # gives us a k value of 30. Then our number is 16**30.
+    tvm.datatype.register_min_func(lambda num_bits: -1.329228e+36, "libposit-posit32")

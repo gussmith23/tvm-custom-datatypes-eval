@@ -1,3 +1,6 @@
 [submodule "universal"]
 	path = datatypes/universal-wrapper/universal
 	url = https://github.com/stillwater-sc/universal
+[submodule "datatypes/libposit/libposit"]
+	path = datatypes/libposit/libposit
+	url = https://github.com/uwsampl/libposit
