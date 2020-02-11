@@ -13,6 +13,10 @@ def run_pretrained_model_test(module,
                               dataset,
                               dtype,
                               num_inferences=NUM_INFERENCES):
+    print()
+    print("BEGIN TEST")
+    print()
+
     conversion_executor = relay.create_executor()
     ex = relay.create_executor(mod=module)
     model = ex.evaluate()
@@ -58,5 +62,9 @@ def run_pretrained_model_test(module,
         }
         print(','.join([str(data[column]) for column in columns]), flush=True)
 
+    print()
     print('Model accuracy:')
     print(correct / tested)
+    print()
+
+    print("END TEST")
