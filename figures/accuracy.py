@@ -33,7 +33,7 @@ files = [(filename, parse_accuracy_test_filename(filename))
 files = list(filter(lambda t: t[1], files))
 
 # Parse data out of files, calculate model accuracy
-data = {}
+table = {}
 for filename, parse in files:
     with open(join(LOG_DIR, filename), 'r') as f:
 
@@ -68,7 +68,6 @@ for filename, parse in files:
             list(map(lambda t: int(t[inference_time_index]), data)))
 
         # Put it all into a big table
-        table = {}
         if parse.dataset not in table:
             table[parse.dataset] = {}
         if parse.model not in table[parse.dataset]:
