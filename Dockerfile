@@ -5,6 +5,9 @@ FROM python:3.7
 RUN apt update && apt install -y --no-install-recommends git libgtest-dev cmake wget unzip libtinfo-dev libz-dev \
      libcurl4-openssl-dev libopenblas-dev g++ sudo python3-dev
 
+# Libposit dependencies: gmp and mpfr
+run apt install -y --no-install-recommends libmpfr-dev libgmp-dev
+
 # LLVM
 RUN echo deb http://apt.llvm.org/buster/ llvm-toolchain-buster-8 main \
      >> /etc/apt/sources.list.d/llvm.list && \
