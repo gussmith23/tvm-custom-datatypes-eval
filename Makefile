@@ -3,4 +3,4 @@ build-datatypes:
 					$(MAKE) -C datatypes/bfloat16
 					$(MAKE) -C datatypes/nop-type
 					$(MAKE) -C datatypes/float32
-					$(MAKE) -C datatypes/libposit-wrapper
+					$(MAKE) -C datatypes/libposit
