@@ -489,3 +489,55 @@ def load_libposit_posit32():
     # es = 2, useed = 16. first bit is sign bit, then 31 bits of '1' for the regime
     # gives us a k value of 30. Then our number is 16**30.
     tvm.datatype.register_min_func(lambda num_bits: -1.329228e+36, "libposit-posit32")
+
+def load_biovault_bfloat16():
+    # Load the datatype manually
+    CDLL(
+        path.join(path.abspath(path.dirname(__file__)),
+                  '../../datatypes/biovault_bfloat16/biovault-bfloat16.so'), RTLD_GLOBAL)
+    tvm.datatype.register("biovault-bfloat16", 135)
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("FloatToBiovaultBFloat16"), "Cast",
+        "llvm", "biovault-bfloat16", "float")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("BiovaultBFloat16ToFloat"), "Cast",
+        "llvm", "float", "biovault-bfloat16")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("IntToBiovaultBFloat16"), "Cast",
+        "llvm", "biovault-bfloat16", "int")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("BiovaultBFloat16Add"), "Add", "llvm",
+        "biovault-bfloat16")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("BiovaultBFloat16Sub"), "Sub", "llvm",
+        "biovault-bfloat16")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("FloatToBiovaultBFloat16"), "FloatImm",
+        "llvm", "biovault-bfloat16")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("BiovaultBFloat16Mul"), "Mul", "llvm",
+        "biovault-bfloat16")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("BiovaultBFloat16Div"), "Div", "llvm",
+        "biovault-bfloat16")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("BiovaultBFloat16Max"), "Max", "llvm",
+        "biovault-bfloat16")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("BiovaultBFloat16Sqrt"),
+        "Call",
+        "llvm",
+        "biovault-bfloat16",
+        intrinsic_name="sqrt")
+    tvm.datatype.register_op(tvm.datatype.lower_ite,
+                             "Call",
+                             "llvm",
+                             "biovault-bfloat16",
+                             intrinsic_name="tvm_if_then_else")
+    tvm.datatype.register_op(
+        tvm.datatype.create_lower_func("BiovaultBFloat16Exp"),
+        "Call",
+        "llvm",
+        "biovault-bfloat16",
+        intrinsic_name="exp")
+    tvm.datatype.register_min_func(lambda num_bits: -3.38953139e38, "biovault-bfloat16")

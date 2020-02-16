@@ -4,3 +4,6 @@
 [submodule "datatypes/libposit/libposit"]
 	path = datatypes/libposit/libposit
 	url = https://github.com/uwsampl/libposit
+[submodule "datatypes/biovault_bfloat16/biovault_bfloat16"]
+	path = datatypes/biovault_bfloat16/biovault_bfloat16
+	url = https://github.com/uwsampl/biovault_bfloat16
