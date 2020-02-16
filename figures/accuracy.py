@@ -96,3 +96,7 @@ datatypes = [
 for dataset in ['cifar10']:
     for model in ['mobilenet', 'resnet50']:
         print(pd.DataFrame.from_dict(table[dataset][model]).transpose())
+
+for dataset in ['cifar10']:
+    for model in ['mobilenet', 'resnet50']:
+        print(pd.DataFrame.from_dict(table[dataset][model]).transpose().to_csv())
