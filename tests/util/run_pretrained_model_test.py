@@ -30,6 +30,8 @@ def run_pretrained_model_test(module,
     tested = 0
     correct = 0
     # Only do a certain number of inferences, to save time
+    # TODO(gus) do we need to do more intelligent/more random sampling from the
+    # dataset, rather than just using the first N?
     for image, target_class in list(dataset)[:num_inferences]:
         # Add batch dimension
         image_tvm = np.expand_dims(image.numpy().astype('float32'), axis=0)
