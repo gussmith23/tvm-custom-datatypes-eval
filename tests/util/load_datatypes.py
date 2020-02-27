@@ -451,10 +451,10 @@ def load_libposit_posit32():
         RTLD_GLOBAL)
     tvm.datatype.register("libposit-posit32", 131)
     tvm.datatype.register_op(
-        tvm.datatype.create_lower_func("_FloatToLibPosit_Posit32es2"), "Cast", "llvm",
+        tvm.datatype.create_lower_func("posit32_fromf"), "Cast", "llvm",
         "libposit-posit32", "float")
     tvm.datatype.register_op(
-        tvm.datatype.create_lower_func("_LibPosit_Posit32es2_ToFloat"), "Cast", "llvm",
+        tvm.datatype.create_lower_func("posit32_tof"), "Cast", "llvm",
         "float", "libposit-posit32")
     tvm.datatype.register_op(tvm.datatype.create_lower_func("_IntToLibPosit_Posit32es2"),
                              "Cast", "llvm", "libposit-posit32", "int")
